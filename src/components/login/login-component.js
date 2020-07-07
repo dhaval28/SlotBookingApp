@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, TouchableOpacity, TextInput, Dimensions
+    View, Text, TouchableOpacity, TextInput, ActivityIndicator
 } from 'react-native';
 import PropTypes from "prop-types";
 
@@ -22,18 +22,21 @@ class LoginComponent extends Component {
             userDetails: {},
             loginBtnText: 'Next',
             loginBtnClicked: false,
-
+            loading: false
         }
-     
+
         this.onLoginBtnClick = this.onLoginBtnClick.bind(this);
     }
 
 
     onLoginBtnClick = () => {
+        // this.setState({ loading: !this.state.loading })
+        // setTimeout(() => {
+        //     this.setState({ loading: !this.state.loading })
+        // }, 2000)
         if (this.state.username && this.state.password) {
-            
-            let userType = this.props.userDetails.userType;
-            switch(userType){
+            let userType = this.props.userDetails.data.userType;
+            switch (userType) {
                 case USER_TYPE.CUSTOMER:
                     this.props.navigation.navigate(ROUTES.CUSTOMER_HOME);
                     break;
@@ -41,7 +44,6 @@ class LoginComponent extends Component {
                     this.props.navigation.navigate(ROUTES.RETAILER_HOME);
                     break;
             }
-           
 
         }
         if (this.state.username) {
@@ -54,9 +56,10 @@ class LoginComponent extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (state.userDetails !== props.userDetails) {            
+        if (state.userDetails !== props.userDetails.data) {
             return {
-                userDetails: props.userDetails,
+                userDetails: props.userDetails.data,
+                loading: props.userDetails.loading
             };
         }
         // Return null to indicate no change to state.
@@ -65,7 +68,7 @@ class LoginComponent extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.container} pointerEvents={this.state.loading ? 'none' : 'auto'}>
                 <View style={styles.logo}>
                     <Text style={styles.logoText}>SBS</Text>
                 </View>
@@ -100,7 +103,11 @@ class LoginComponent extends Component {
 
                     </View>
                 </TouchableOpacity>
-
+                {this.state.loading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='white' />
+                    </View>
+                }
             </View>
         );
     }
@@ -109,11 +116,11 @@ class LoginComponent extends Component {
 LoginComponent.propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.any,
-    userDetails: PropTypes.any
+    userDetails: PropTypes.any,
 }
 const storeConnected = connect(
-    state => ({        
-        userDetails: getUserDetails(state)
+    state => ({
+        userDetails: getUserDetails(state),
     })
 );
 

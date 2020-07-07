@@ -51,7 +51,17 @@ export const styles = StyleSheet.create({
         top: '18%',
         right: '5%',
         zIndex: 5
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'black',
+        opacity: 0.5
     }
-
 
 });

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import {
-    View, ScrollView, TextInput, TouchableOpacity
+    View, ScrollView, TextInput, TouchableOpacity, ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
 import { getDataList, getUserDetails } from './../../redux/slotbook-reducer';
@@ -19,11 +19,12 @@ class SearchPage extends Component {
         super(props);
 
         this.state = {
-            dataList: props.dataList,
+            dataList: props.dataList.data,
             keyTitle: "title",
             keyValue: "value",
-            userDetails: props.userDetails,
-            onSearch: false
+            userDetails: props.userDetails.data,
+            onSearch: false,
+            loading: false
         }
         this.onItemClick = this.onItemClick.bind(this);
         this.onSearch = this.onSearch.bind(this);
@@ -55,7 +56,7 @@ class SearchPage extends Component {
     }
 
     onSearch(val) {
-        let data = this.props.dataList.filter(item => item[this.state.keyTitle].toLowerCase().includes(val.toLowerCase()));
+        let data = this.props.dataList.data.filter(item => item[this.state.keyTitle].toLowerCase().includes(val.toLowerCase()));
         this.setState({ dataList: data, onSearch: true });
     }
 
@@ -82,20 +83,21 @@ class SearchPage extends Component {
                 break;
 
         }
-        this.props.dispatch(fetchDataList(this.props.userDetails, this.props.route.params.pageType));
+        this.props.dispatch(fetchDataList(this.props.userDetails.data, this.props.route.params.pageType));
     }
 
     static getDerivedStateFromProps(props, state) {
 
-        if (props.dataList !== state.dataList && !state.onSearch) {
+        if (props.dataList.data !== state.dataList && !state.onSearch) {
 
             return {
-                dataList: props.dataList
+                dataList: props.dataList.data,
+                loading: props.dataList.loading
             };
         }
-        if (state.userDetails !== props.userDetails) {
+        if (state.userDetails !== props.userDetails.data) {
             return {
-                userDetails: props.userDetails,
+                userDetails: props.userDetails.data,
             };
         }
 
@@ -105,7 +107,7 @@ class SearchPage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.container} pointerEvents={this.state.loading ? 'none' : 'auto'}>
                 <View style={styles.top}>
                     <View>
                         <TouchableOpacity style={styles.searchIcon}>
@@ -133,11 +135,13 @@ class SearchPage extends Component {
                                 </View>
                             ))
                         }
-
-
                     </View>
                 </ScrollView>
-
+                {this.state.loading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='white' />
+                    </View>
+                }
             </View>
 
         );

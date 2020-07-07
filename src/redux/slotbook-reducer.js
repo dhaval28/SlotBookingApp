@@ -25,10 +25,11 @@ const initialState = {
 const userDetailsReducer = (state = initialState.userDetails, { type, payload }) => {
     switch (type) {
         case api_request(FETCH_USER_DETAILS):
-            return state;
+            // return state;
+            return { loading: true };
         case api_response(FETCH_USER_DETAILS):
             console.log("success", payload);
-            return payload;
+            return { loading: false, data: payload };
         case api_error(FETCH_USER_DETAILS):
             return payload;
         default:
@@ -39,27 +40,27 @@ const userDetailsReducer = (state = initialState.userDetails, { type, payload })
 const searchDataReducer = (state = initialState.searchData, { type, payload }) => {
     switch (type) {
         case api_request(FETCH_RETAILER_LIST):
-            return state;
+            return { loading: true };
         case api_response(FETCH_RETAILER_LIST):
-            return payload;
+            return { loading: false, data: payload };
         case api_error(FETCH_RETAILER_LIST):
             return payload;
         case api_request(FETCH_BOOKING_DATA_LIST):
-            return state;
+            return { loading: true };
         case api_response(FETCH_BOOKING_DATA_LIST):
-            return payload;
+            return { loading: false, data: payload };
         case api_error(FETCH_BOOKING_DATA_LIST):
             return payload;
         case api_request(FETCH_RETAILER_BOOKING_DATA_LIST):
-            return state;
+            return { loading: true };
         case api_response(FETCH_RETAILER_BOOKING_DATA_LIST):
-            return payload;
+            return { loading: false, data: payload };
         case api_error(FETCH_RETAILER_BOOKING_DATA_LIST):
             return payload;
         case api_request(FETCH_PENDING_REQUESTS):
-            return state;
+            return { loading: true };
         case api_response(FETCH_PENDING_REQUESTS):
-            return payload;
+            return { loading: false, data: payload };
         case api_error(FETCH_PENDING_REQUESTS):
             return payload;
         default:
@@ -72,7 +73,7 @@ const retailerListReducer = (state = initialState.retailerList, { type, payload 
         case api_request(FETCH_RETAILER_LIST):
             return state;
         case api_response(FETCH_RETAILER_LIST):
-            
+
             return payload;
         case api_error(FETCH_RETAILER_LIST):
             return payload;
@@ -109,14 +110,14 @@ const bookingDataListReducer = (state = initialState.bookingDataList, { type, pa
         case api_response(FETCH_RETAILER_BOOKING_DATA_LIST):
             return payload;
         case api_error(FETCH_RETAILER_BOOKING_DATA_LIST):
-            return payload;       
+            return payload;
         case api_request(FETCH_PENDING_REQUESTS):
             return state;
         case api_response(FETCH_PENDING_REQUESTS):
             return payload;
         case api_error(FETCH_PENDING_REQUESTS):
-            return payload;       
-               
+            return payload;
+
         default:
             return state;
     }
