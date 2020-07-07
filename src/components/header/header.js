@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
-    View, Text
+    View, Text, Image
 } from 'react-native';
+import PropTypes from "prop-types";
 import { styles } from './header-style';
+import { avatar } from './../../util/icons';
 
 class HeaderComponent extends Component {
     constructor(props) {
@@ -13,11 +15,21 @@ class HeaderComponent extends Component {
 
     render() {
         return (
-            <View style={styles.titleWrapper}>
-                <Text style={styles.appTitle}>SLOT MANAGEMENT APP</Text>
+            <View style={styles.header}>
+                <Image source={avatar} style={styles.avatar} />
+                <View style={styles.username}>
+                    <Text style={styles.usernameText}>{this.props.user?.displayName} </Text>
+                </View>
+                <View style={styles.usertype}>
+                    <Text style={styles.usertypeText}>{this.props.user?.userType}</Text>
+                </View>
             </View>
         );
     }
+}
+
+HeaderComponent.propTypes = {
+    user: PropTypes.any
 }
 
 export default HeaderComponent;

@@ -1,40 +1,62 @@
 import { StyleSheet } from 'react-native';
+import { COLOR, FONT_SIZE, ELEMENT_HEIGHT, PADDING_DIST } from './../../util/style-constants';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F6CE'
+        alignItems: 'center'
     },
-    wrapper: {
-        marginTop: 15
-    },
-    titleWrapper: {
+    headerContainer: {
         flex: 1,
+        backgroundColor: 'red',
+        height: 200
+    },
+    tileContainer: {
+        flex: 1
+    },
+    header: {
+        top: 0,
+        height: ELEMENT_HEIGHT.HEADING_BAR,
+        width: '100%',
+        backgroundColor: COLOR.CMN_THEME,
+    },
+    avatar: {
+        top: PADDING_DIST.D10,
+        left: PADDING_DIST.D10,
+        height: ELEMENT_HEIGHT.AVATAR,
+        width: ELEMENT_HEIGHT.AVATAR,
+        borderRadius: ELEMENT_HEIGHT.AVATAR / 2
+    },
+    username: {
+        position: 'absolute',
+        top: PADDING_DIST.D20,
+        left: ELEMENT_HEIGHT.AVATAR + 30,
+    },
+    usernameText: {
+        color: COLOR.CMN_THEME_INNER_FONT,
+        fontSize: FONT_SIZE.NORMAL_FONT,
+        fontWeight: 'bold'
+    },
+    usertype: {
+        position: 'absolute',
+        top: 50,
+        left: ELEMENT_HEIGHT.AVATAR + 30,
+    },
+    usertypeText: {
+        color: COLOR.CMN_THEME_INNER_FONT,
+        fontSize: FONT_SIZE.NORMAL_FONT
+    },
+    tile: {
+        height: '15%',
+        width: '80%',
+        backgroundColor: COLOR.CMN_THEME,
+        marginTop: '28%',
+        alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row'
+        borderRadius: 30
     },
-    appTitle: {
-        color: 'black',
-        fontSize: 30,
-        fontWeight: '800',
-        paddingVertical: 30
-    },
-    bookingDetails: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        flexDirection: 'row',
-        paddingLeft: 10
-    },
-    input: {
-        height: 40,
-        borderColor: '#7a42f4',
-        borderWidth: 1,
-        width: 300
-    },
-    calendar: {
-        borderTopWidth: 1,
-        paddingTop: 5,
-        borderBottomWidth: 1,
-        borderColor: '#eee',
-        height: 350
+
+    tileFont: {
+        fontSize: FONT_SIZE.TILE_FONT,
+        color: COLOR.CMN_THEME_INNER_FONT
     }
 });

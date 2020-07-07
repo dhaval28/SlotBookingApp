@@ -1,62 +1,107 @@
 import React, { Component } from 'react';
 import {
-    View, Text, Button, ScrollView
+    View, Text, TouchableOpacity
 } from 'react-native';
-import { RadioButton } from 'react-native-paper';
+import PropTypes from "prop-types";
+import { getUserDetails } from './../../redux/slotbook-reducer';
+import { setSelectedShop } from './../../redux/slotbook-actions';
 import { styles } from './retailer-home-style';
-import RetailerRequestsComponent from './retailer-requests/retailer-requests'
+import { ROUTES, PAGE_TYPE } from './../../util/constants';
+import { connect } from 'react-redux';
+import HeaderComponent from './../header/header';
 
 class RetailerHomeComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            retailerOutletSelected: 'first',
-            outletSelected: false
+            slotBookingScreen: false,
+            retailer: {}
         }
+        this.onBookSlotForCust = this.onBookSlotForCust.bind(this);
+        this.onViewBooking = this.onViewBooking.bind(this);
+        this.onViewPending = this.onViewPending.bind(this);
     }
 
-    onProceed = () => {
-        this.setState({ outletSelected: true })
+    static getDerivedStateFromProps(props, state) {
+
+
+        if (state.userDetails !== props.userDetails) {
+            return {
+                userDetails: props.userDetails,
+            };
+        }
+
+        // Return null to indicate no change to state.
+        return null;
+    }
+
+    onBookSlotForCust() {
+        
+        this.props.dispatch(setSelectedShop({
+            title: this.props.userDetails.shopName,
+            value: this.props.userDetails.shopAddress,
+            code: this.props.userDetails.username
+        }));
+                
+        this.props.navigation.navigate(ROUTES.BOOKING_VIEW, { pageType: PAGE_TYPE.CUSTOMER_BOOKING });
+    }
+
+    onViewBooking() {       
+        this.props.navigation.navigate(ROUTES.SEARCH_PAGE, { pageType: PAGE_TYPE.RETAILER_VIEW_BOOKINGS });
+    }
+
+    onViewPending() {        
+        this.props.navigation.navigate(ROUTES.SEARCH_PAGE, { pageType: PAGE_TYPE.PENDING_REQUESTS });
     }
 
     render() {
         return (
-            <View>
-                <ScrollView>
-                    <View style={styles.titleWrapper}>
-                        <Text style={{ fontSize: 28, color: 'green' }}>Welcome Ret_Pantaloons</Text>
-                    </View>
-                    {!this.state.outletSelected ? <View style={{ padding: 10, }}>
-                        <Text style={{ fontSize: 24 }}>Select an Outlet:</Text>
+            <View style={styles.container}>
 
-                        <RadioButton.Group
-                            onValueChange={value => this.setState({ retailerOutletSelected: value })}
-                            value={this.state.retailerOutletSelected}
-                        >
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <RadioButton value="first" />
-                                <Text style={{ marginTop: 4, fontSize: 20 }}>Pantaloons, Koromangala</Text>
-                            </View>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <RadioButton value="second" />
-                                <Text style={{ marginTop: 4, fontSize: 20 }}>Pantaloons, E-City</Text>
-                            </View>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <RadioButton value="third" />
-                                <Text style={{ marginTop: 4, fontSize: 20 }}>Pantaloons, White Field</Text>
-                            </View>
-                        </RadioButton.Group>
-                        <Text>{"\n"}</Text>
-                        <View style={styles.titleWrapper}>
-                            <Button onPress={() => this.setState({ outletSelected: true })} title='Proceed'></Button>
+                <HeaderComponent user={this.state.userDetails} />
+
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onViewPending() }}>
+
+                        <View>
+                            <Text style={styles.tileFont}>Approve Bookings</Text>
                         </View>
-                    </View> : <RetailerRequestsComponent />}
-                </ScrollView>
+
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onViewBooking() }}>
+
+                        <View>
+                            <Text style={styles.tileFont}>View Bookings</Text>
+                        </View>
+
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onBookSlotForCust() }}>
+
+                        <View>
+                            <Text style={styles.tileFont}>Book a slot</Text>
+                        </View>
+
+                    </TouchableOpacity>
+                </View>
 
             </View>
-
         );
     }
 }
 
-export default RetailerHomeComponent;
+RetailerHomeComponent.propTypes = {
+    dispatch: PropTypes.func,
+    navigation: PropTypes.any
+}
+
+const storeConnected = connect(
+    state => ({
+        userDetails: getUserDetails(state)
+    })
+);
+
+export default storeConnected(RetailerHomeComponent);

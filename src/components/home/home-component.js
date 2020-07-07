@@ -1,53 +1,104 @@
 import React, { Component } from 'react';
 import {
-    View, Text, Image, TouchableHighlight
+    View, Text, TouchableOpacity
 } from 'react-native';
-import HeaderComponent from './../header/header'
-import { styles } from './home-style';
-import { ret_logo, cust_logo } from './../../util/icons'
-import { USER_TYPE } from './../../util/constants'
-import CustomerHomeComponent from './../customer-home/customer-home'
-import RetailerHomeComponent from './../retailer-home/retailer-home'
+import PropTypes from "prop-types";
+import { getUserDetails } from './../../redux/slotbook-reducer';
+import { styles } from './retailer-home-style';
+import { ROUTES, PAGE_TYPE } from './../../util/constants';
+import { connect } from 'react-redux';
+import HeaderComponent from './../header/header';
 
 class HomeComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userType: '',
-            showHome: true
+            slotBookingScreen: false,
+            retailer: {}
         }
+        this.onBookSlotForCust = this.onBookSlotForCust.bind(this);
+        this.onViewBooking = this.onViewBooking.bind(this);
+        this.onViewPending = this.onViewPending.bind(this);
     }
 
-    userTypeSelected = (user) => {
-        this.setState({ userType: user, showHome: false });
+    static getDerivedStateFromProps(props, state) {
+
+
+        if (state.userDetails !== props.userDetails) {
+            return {
+                userDetails: props.userDetails,
+            };
+        }
+
+        // Return null to indicate no change to state.
+        return null;
+    }
+
+    onBookSlotForCust() {
+        console.log("Book a slot");
+    }
+
+    onViewBooking() {
+        console.log("View Bookings");
+        //this.props.navigation.navigate(ROUTES.RETAILER_VIEW_BOOKINGS, { pendingFlag: false });
+        this.props.navigation.navigate(ROUTES.SEARCH_PAGE, { pageType: PAGE_TYPE.RETAILER_VIEW_BOOKINGS });
+    }
+
+    onViewPending() {
+        console.log("View Pending");
+        //this.props.navigation.navigate(ROUTES.RETAILER_VIEW_BOOKINGS, { pendingFlag: true });
+        this.props.navigation.navigate(ROUTES.SEARCH_PAGE, { pageType: PAGE_TYPE.PENDING_REQUESTS });
     }
 
     render() {
         return (
-            <View>
-                <HeaderComponent />
-                {this.state.showHome && <View><TouchableHighlight style={styles.loginBox} onPress={this.userTypeSelected.bind(this, USER_TYPE.RETAILER)}>
-                    <View>
-                        <Image style={{ width: 140, height: 140, margin: 3 }}
-                            source={ret_logo} />
-                        <Text style={{ fontSize: 20 }}>Retailer Login</Text>
-                    </View>
-                </TouchableHighlight>
-                    <TouchableHighlight style={styles.loginBox} onPress={this.userTypeSelected.bind(this, USER_TYPE.CUSTOMER)}>
+            <View style={styles.container}>
+
+                <HeaderComponent user={this.state.userDetails} />
+                <View style={styles.tileContainer}>
+                    
+                </View>
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onViewPending() }}>
+
                         <View>
-                            <Image style={{ width: 140, height: 140, margin: 3 }}
-                                source={cust_logo} />
-                            <Text style={{ fontSize: 20 }}>Customer Login</Text>
+                            <Text style={styles.tileFont}>Pending Requests</Text>
                         </View>
-                    </TouchableHighlight></View>}
 
-                {this.state.userType === USER_TYPE.CUSTOMER && <CustomerHomeComponent />}
-                {this.state.userType === USER_TYPE.RETAILER && <RetailerHomeComponent />}
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onViewBooking() }}>
+
+                        <View>
+                            <Text style={styles.tileFont}>View Bookings</Text>
+                        </View>
+
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tile}>
+                    <TouchableOpacity onPress={() => { this.onBookSlotForCust() }}>
+
+                        <View>
+                            <Text style={styles.tileFont}>Book a slot</Text>
+                        </View>
+
+                    </TouchableOpacity>
+                </View>
+
             </View>
-
-
         );
     }
 }
 
-export default HomeComponent;
+RetailerHomeComponent.propTypes = {
+    navigation: PropTypes.any
+}
+
+const storeConnected = connect(
+    state => ({
+        userDetails: getUserDetails(state)
+    })
+);
+
+export default storeConnected(RetailerHomeComponent);
