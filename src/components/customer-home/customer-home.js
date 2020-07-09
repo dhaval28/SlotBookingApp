@@ -21,9 +21,9 @@ class CustomerHomeComponent extends Component {
     static getDerivedStateFromProps(props, state) {
 
 
-        if (state.userDetails !== props.userDetails) {
+        if (state.userDetails !== props.userDetails.data) {
             return {
-                userDetails: props.userDetails,
+                userDetails: props.userDetails.data,
             };
         }
 

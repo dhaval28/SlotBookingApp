@@ -22,7 +22,8 @@ class LoginComponent extends Component {
             userDetails: {},
             loginBtnText: 'Next',
             loginBtnClicked: false,
-            loading: false
+            loading: false,
+            invalidCredentials: false
         }
 
         this.onLoginBtnClick = this.onLoginBtnClick.bind(this);
@@ -30,19 +31,22 @@ class LoginComponent extends Component {
 
 
     onLoginBtnClick = () => {
-        // this.setState({ loading: !this.state.loading })
-        // setTimeout(() => {
-        //     this.setState({ loading: !this.state.loading })
-        // }, 2000)
         if (this.state.username && this.state.password) {
             let userType = this.props.userDetails.data.userType;
-            switch (userType) {
-                case USER_TYPE.CUSTOMER:
-                    this.props.navigation.navigate(ROUTES.CUSTOMER_HOME);
-                    break;
-                case USER_TYPE.RETAILER:
-                    this.props.navigation.navigate(ROUTES.RETAILER_HOME);
-                    break;
+            console.log('userType', this.props.userDetails)
+            if (userType) {
+                this.setState({ invalidCredentials: false });
+                switch (userType) {
+                    case USER_TYPE.CUSTOMER:
+                        this.props.navigation.navigate(ROUTES.CUSTOMER_HOME);
+                        break;
+                    case USER_TYPE.RETAILER:
+                        this.props.navigation.navigate(ROUTES.RETAILER_HOME);
+                        break;
+                }
+            }
+            else {
+                this.setState({ invalidCredentials: true });
             }
 
         }
@@ -94,6 +98,8 @@ class LoginComponent extends Component {
                             <Text style={styles.normalFont}>{this.state.loginBtnText}</Text>
                         </View>
                     </TouchableOpacity>
+                    {this.state.invalidCredentials && 
+                    <Text style={styles.invalidCredentials}>Invalid Username or Password</Text>}
                 </View>
 
                 <TouchableOpacity style={styles.registerBtn}>

@@ -25,9 +25,9 @@ class RetailerHomeComponent extends Component {
     static getDerivedStateFromProps(props, state) {
 
 
-        if (state.userDetails !== props.userDetails) {
+        if (state.userDetails !== props.userDetails.data) {
             return {
-                userDetails: props.userDetails,
+                userDetails: props.userDetails.data,
             };
         }
 
@@ -38,9 +38,9 @@ class RetailerHomeComponent extends Component {
     onBookSlotForCust() {
         
         this.props.dispatch(setSelectedShop({
-            title: this.props.userDetails.shopName,
-            value: this.props.userDetails.shopAddress,
-            code: this.props.userDetails.username
+            title: this.props.userDetails.data.shopName,
+            value: this.props.userDetails.data.shopAddress,
+            code: this.props.userDetails.data.username
         }));
                 
         this.props.navigation.navigate(ROUTES.BOOKING_VIEW, { pageType: PAGE_TYPE.CUSTOMER_BOOKING });

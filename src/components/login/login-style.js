@@ -69,5 +69,11 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'black',
         opacity: 0.5
+    },
+    invalidCredentials: {
+        color: 'red',
+        fontSize: FONT_SIZE.NORMAL_FONT,
+        marginLeft: 45,
+        padding: 10
     }
 });
